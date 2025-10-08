@@ -1,5 +1,12 @@
-const _ = require("lodash");
+const EventsEmitter = require("events");
 
-const items = [1, [2, [3, [4]]]];
-const newItems = _.flattenDeep(items);
-console.log(newItems);
+const customEmitter = new EventsEmitter();
+
+customEmitter.on("response", (name, age) => {
+  console.log(`data recieved ${name} which is ${age} years old`);
+});
+customEmitter.on("response", () => {
+  console.log("some other logic here");
+});
+
+customEmitter.emit("response", "john", 34);
