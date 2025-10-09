@@ -1,12 +1,17 @@
-const EventsEmitter = require("events");
+const http = require("http");
+const fs = require("fs");
 
-const customEmitter = new EventsEmitter();
+http
+  .createServer(function (req, res) {
+    // const text = fs.readFileSync("./content/big.txt", "utf8");
+    // res.end(text);
+    const fileStream = fs.createReadStream("./content/big.txt", "utf8");
+    fileStream.on("open", () => {
+      fileStream.pipe(res);
+    });
 
-customEmitter.on("response", (name, age) => {
-  console.log(`data recieved ${name} which is ${age} years old`);
-});
-customEmitter.on("response", () => {
-  console.log("some other logic here");
-});
-
-customEmitter.emit("response", "john", 34);
+    fileStream.on("error", () => {
+      res.end(err);
+    });
+  })
+  .listen(5000);
