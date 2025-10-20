@@ -1,18 +1,25 @@
 const express = require("express");
-const path = require("path");
-
 const app = express();
+let { people } = require("./data");
 
-app.use(express.static("./public"));
+// static assets
+app.use(express.static("./methods-public"));
 
-app.get("/", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./navbar-app/index.html"));
+// parse form data
+app.use(express.urlencoded({ extended: false }));
+
+app.get("/api/people", (req, res) => {
+  res.status(200).json({ success: true, data: people });
 });
 
-app.all("*", (req, res) => {
-  res.status(404).send("Resource not found");
+app.post("/login", (req, res) => {
+  const { name } = req.body;
+  if (name) {
+    return res.status(200).send(`Welcome ${name}`);
+  }
+  res.status(401).send("Please Provide Credentials");
 });
 
 app.listen(5000, () => {
-  console.log("Server on port 5000...");
+  console.log("Server run on port 5000...");
 });
